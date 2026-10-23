@@ -1,9 +1,29 @@
 # Catálogo de cursos educacionais
 
-Monorepo com backend somente leitura em [apps/backend](apps/backend). A API roda no terminal do host; apenas o PostgreSQL roda no Docker. Nenhum frontend é necessário.
+Monorepo com backend somente leitura em [apps/backend](apps/backend) e frontend demonstrativo opcional em [apps/frontend](apps/frontend). A API roda no terminal do host; apenas o PostgreSQL roda no Docker. O frontend não depende da API, do banco ou do Docker.
 
 - [Requisitos funcionais](docs/prd.md)
 - [Desenvolvimento do backend](apps/backend/README.md)
+- [Desenvolvimento do frontend](apps/frontend/README.md)
+
+## Execução independente do frontend
+
+Pré-requisitos: Node.js `>=22.13` e pnpm `11.9.0`. A instalação e os comandos abaixo são executados na raiz e não iniciam a API, o PostgreSQL nem o Docker:
+
+```sh
+pnpm install
+pnpm frontend:dev --host 127.0.0.1
+```
+
+Para verificar e visualizar o build:
+
+```sh
+pnpm frontend:typecheck
+pnpm frontend:build
+pnpm frontend:preview --host 127.0.0.1
+```
+
+As rotas, os limites da demonstração e as instruções para hospedagem estática estão em [apps/frontend/README.md](apps/frontend/README.md).
 
 ## Pré-requisitos
 

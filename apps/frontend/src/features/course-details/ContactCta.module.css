@@ -1,0 +1,43 @@
+.section {
+  display: grid;
+  justify-items: center;
+  background: #890000;
+  padding: clamp(4rem, 8vw, 7rem) 1.5rem;
+  color: #ffffff;
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0 0 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+}
+
+.section h2 {
+  margin: 0 0 1.75rem;
+  font-size: clamp(2.5rem, 5vw, 4.25rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.045em;
+}
+
+.button {
+  display: inline-flex;
+  min-height: 3.25rem;
+  align-items: center;
+  gap: 0.5rem;
+  border: 0;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  color: #0c0c0d;
+  background: #ffffff;
+  font: inherit;
+  font-weight: 700;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.88;
+}

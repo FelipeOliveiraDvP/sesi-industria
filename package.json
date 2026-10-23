@@ -1,0 +1,14 @@
+{
+  "name": "sesi-industria",
+  "private": true,
+  "packageManager": "pnpm@11.9.0",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "frontend:dev": "pnpm --filter @sesi/frontend dev",
+    "frontend:typecheck": "pnpm --filter @sesi/frontend typecheck",
+    "frontend:build": "pnpm --filter @sesi/frontend build",
+    "frontend:preview": "pnpm --filter @sesi/frontend preview"
+  }
+}

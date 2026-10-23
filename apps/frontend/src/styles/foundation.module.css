@@ -1,0 +1,47 @@
+.container {
+  width: min(100% - 3rem, 76rem);
+  margin-inline: auto;
+}
+
+.section {
+  padding-block: clamp(4rem, 7vw, 7rem);
+}
+
+.sectionTitle {
+  margin: 0;
+  color: #0c0c0d;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+}
+
+.bodyCopy {
+  max-width: 46rem;
+  color: #4f4a49;
+  line-height: 1.75;
+}
+
+.unavailable {
+  cursor: not-allowed;
+}
+
+.heroMarker {
+  height: 1px;
+}
+
+@media (max-width: $mantine-breakpoint-md) {
+  .container {
+    width: min(100% - 2.5rem, 76rem);
+  }
+}
+
+@media (max-width: $mantine-breakpoint-sm) {
+  .container {
+    width: min(100% - 2rem, 76rem);
+  }
+
+  .section {
+    padding-block: 3.5rem;
+  }
+}

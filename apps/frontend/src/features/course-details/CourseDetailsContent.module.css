@@ -1,0 +1,162 @@
+.section {
+  background: #ffffff;
+  padding-block: 2rem clamp(4rem, 8vw, 7rem);
+}
+
+.container {
+  width: min(100% - 3rem, 76rem);
+  margin-inline: auto;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  align-items: start;
+  gap: clamp(3rem, 7vw, 7rem);
+}
+
+.about h2 {
+  margin: 0 0 1.25rem;
+  color: #0c0c0d;
+  font-size: clamp(2rem, 3.4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.04em;
+}
+
+.about p,
+.accordionPanel p,
+.accordionPanel li {
+  color: #4f4a49;
+  font-size: 0.9375rem;
+  line-height: 1.75;
+}
+
+.about p {
+  margin: 0;
+}
+
+.accordion {
+  min-width: 0;
+  color: #0c0c0d;
+}
+
+.accordionItem {
+  border: 0;
+  border-bottom: 1px solid #e6e1e0;
+}
+
+.accordionItem:first-of-type {
+  border-top: 1px solid #e6e1e0;
+}
+
+.accordionControl {
+  min-height: 4.25rem;
+  padding: 1rem 0;
+  color: #0c0c0d;
+  background: transparent;
+}
+
+.accordionControl:hover {
+  background: transparent;
+}
+
+.accordionLabel {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.accordionChevron {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.accordionChevron img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.accordionPanel {
+  padding: 0.25rem 0 1.75rem;
+}
+
+.accordionPanel p {
+  margin: 0.5rem 0 0.75rem;
+}
+
+.accordionPanel ul,
+.accordionPanel ol {
+  margin: 0.75rem 0 1rem;
+  padding-left: 1.25rem;
+}
+
+.modules {
+  display: grid;
+  gap: 1.25rem;
+  padding-left: 0;
+  list-style: none;
+}
+
+.modules > li {
+  padding-left: 0.25rem;
+}
+
+.modules h4,
+.contentBlock h4 {
+  margin: 0 0 0.5rem;
+  color: #0c0c0d;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.modules ul {
+  margin-block: 0.5rem 0;
+}
+
+.contentBlock + .contentBlock {
+  margin-top: 2rem;
+}
+
+.faqList {
+  display: grid;
+  gap: 1.25rem;
+  margin: 0;
+}
+
+.faqList dt {
+  color: #0c0c0d;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.faqList dd {
+  margin: 0.35rem 0 0;
+  color: #4f4a49;
+  font-size: 0.9375rem;
+  line-height: 1.75;
+}
+
+@media (max-width: $mantine-breakpoint-md) {
+  .container {
+    width: min(100% - 2.5rem, 76rem);
+  }
+
+  .layout {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: 2rem;
+  }
+}
+
+@media (max-width: $mantine-breakpoint-sm) {
+  .container {
+    width: min(100% - 2rem, 76rem);
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}

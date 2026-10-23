@@ -7,6 +7,10 @@ coverage/
 *.trx
 *.nupkg
 
+# Frontend workspace and production output
+node_modules/
+apps/frontend/dist/
+
 # Local configuration and credentials (examples remain versionable)
 .env
 .env.*

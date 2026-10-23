@@ -1,0 +1,78 @@
+.root {
+  display: grid;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.heading {
+  min-width: 0;
+}
+
+.controls {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 0.625rem;
+}
+
+.controls button {
+  color: #0c0c0d;
+  border-color: rgb(12 12 13 / 18%);
+  background: #ffffff;
+}
+
+.controls button:not(:disabled):hover {
+  color: #890000;
+  background: #fff5f3;
+}
+
+.controls button:disabled {
+  color: #77706f;
+  background: #f4f1f0;
+  opacity: 0.72;
+}
+
+.controls img {
+  display: block;
+}
+
+.viewport {
+  min-width: 0;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-color: #890000 #f2e9e6;
+  scrollbar-width: thin;
+}
+
+.viewport:focus-visible {
+  outline-offset: 0.5rem;
+}
+
+@media (max-width: $mantine-breakpoint-sm) {
+  .root {
+    gap: 1rem;
+  }
+
+  .header {
+    gap: 0.75rem;
+  }
+
+  .controls {
+    gap: 0.375rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .viewport {
+    scroll-behavior: auto;
+  }
+}

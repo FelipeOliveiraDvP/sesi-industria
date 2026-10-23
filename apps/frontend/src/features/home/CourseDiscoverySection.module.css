@@ -1,0 +1,190 @@
+.section {
+  overflow: hidden;
+  background: #ffffff;
+  padding-block: clamp(4rem, 7vw, 6.5rem);
+  scroll-margin-top: 5rem;
+}
+
+.container {
+  width: min(100% - 3rem, 76rem);
+  margin-inline: auto;
+}
+
+.heading {
+  margin: 0;
+  color: #0c0c0d;
+  font-size: clamp(2.25rem, 4vw, 3.25rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.04em;
+}
+
+.track {
+  display: flex;
+  gap: 1.25rem;
+  width: max-content;
+  min-width: 100%;
+  margin: 0;
+  padding: 0 0 1rem;
+  list-style: none;
+}
+
+.trackItem {
+  flex: 0 0 17rem;
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 26rem;
+  align-items: flex-end;
+  overflow: hidden;
+  border-radius: 0.625rem;
+  color: #ffffff;
+  background: #890000;
+  isolation: isolate;
+  text-align: left;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+.courseLink {
+  text-decoration: none;
+}
+
+.courseLink:focus-visible {
+  outline-offset: 4px;
+}
+
+.photo,
+.gradient {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.photo {
+  object-fit: cover;
+  transition: transform 250ms ease;
+}
+
+.courseLink:hover .photo {
+  transform: scale(1.035);
+}
+
+.gradient {
+  background: linear-gradient(180deg, rgb(0 0 0 / 10%) 0%, rgb(86 0 6 / 22%) 35%, rgb(137 0 0 / 96%) 100%);
+}
+
+.category {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: inline-flex;
+  max-width: calc(100% - 2rem);
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  color: #0c0c0d;
+  background: #ffffff;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.category img {
+  flex: 0 0 auto;
+}
+
+.copy {
+  display: grid;
+  gap: 0.7rem;
+  padding: 1.5rem;
+}
+
+.cardTitle {
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.description {
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+.allCourses {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  background: linear-gradient(145deg, #c3222c 0%, #890000 62%, #5b0000 100%);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.allCoursesArrow {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.allCoursesAction {
+  display: flex;
+  justify-content: center;
+  padding-top: 2rem;
+}
+
+.allCoursesButton {
+  min-height: 3rem;
+  padding-inline: 1.5rem;
+  color: #ffffff;
+  background: #0c0c0d;
+  font-weight: 700;
+}
+
+.allCoursesButton:disabled {
+  color: #ffffff;
+  background: #0c0c0d;
+  opacity: 0.78;
+}
+
+@media (max-width: $mantine-breakpoint-sm) {
+  .section {
+    padding-block: 3.5rem;
+  }
+
+  .container {
+    width: min(100% - 2rem, 76rem);
+  }
+
+  .trackItem {
+    flex-basis: min(82vw, 17rem);
+  }
+
+  .card {
+    height: 24rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .photo {
+    transition: none;
+  }
+}
