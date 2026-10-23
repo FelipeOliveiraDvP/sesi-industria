@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="title description">
+  <title id="title">Projetos — curso fictício</title>
+  <desc id="description">Imagem local de apresentação de Projetos Colaborativos para Educação.</desc>
+  <rect width="640" height="360" fill="#fff2df"/>
+  <rect x="48" y="48" width="96" height="96" rx="16" fill="#9c5c15"/>
+  <path d="M72 76h48v32H72zM88 108v12m-8 0h32" fill="none" stroke="#fff" stroke-width="5"/>
+  <text x="48" y="230" font-family="sans-serif" font-size="48" fill="#694019">Projetos</text>
+  <text x="48" y="290" font-family="sans-serif" font-size="24" fill="#694019">Catálogo educacional · Curso fictício 03</text>
+</svg>
