@@ -40,6 +40,8 @@ Atualizar `README.md` com o endereço web do repositório e o clone SSH, substit
 
 Antes do push, revisar o conteúdo rastreado e as alterações para impedir a inclusão de `.env` local, chaves privadas, credenciais ou artefatos gerados. A chave SSH fica fora do repositório. A visibilidade e permissões existentes não serão modificadas.
 
+Por decisão expressa do usuário, incluir `opencode.json` na publicação. O arquivo foi validado como JSON; a configuração é um endpoint HTTPS de MCP sem userinfo, query ou fragmento, e a varredura de marcadores de credenciais não encontrou correspondências. Repetir a revisão no diff final e interromper se o arquivo passar a conter credenciais literais.
+
 **Alternativa:** espalhar instruções de clone por todos os READMEs duplicaria a fonte de verdade. Os READMEs das aplicações já direcionam para a raiz/guia; atualizar os pontos que contêm placeholders ou instruções de publicação mantém referências locais e não duplicadas.
 
 ### CI preservada; Railway adiado
@@ -60,7 +62,7 @@ Manter `.github/workflows/ci.yml` sem mudanças: seus eventos atuais já incluem
 
 1. Confirmar árvore de trabalho limpa, branch `main`, URL do remoto, refs atuais e revisão de segurança dos arquivos versionados.
 2. Atualizar e revisar a documentação; validar links, comandos de clone e consistência das afirmações sobre CI e Railway.
-3. Criar um commit para as alterações documentais em `main`, configurar `origin` com a URL SSH fornecida e publicar `main` sem reescrita de histórico. Se o remoto já não estiver vazio ou houver divergência, parar e reavaliar.
+3. Configurar `origin` com a URL SSH fornecida e revisar o commit local que contém documentação, artifacts OpenSpec e `opencode.json`; publicar `main` sem reescrita de histórico. Se o remoto já não estiver vazio ou houver divergência, parar e reavaliar.
 4. Confirmar `main` como branch padrão no GitHub e verificar a execução real da CI para o commit publicado.
 5. Deixar a associação Railway, **Wait for CI**, serviços, banco, domínios, variáveis e deploy para uma change/operação futura.
 

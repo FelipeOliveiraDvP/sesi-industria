@@ -3,7 +3,7 @@
 ## 1. Pré-publicação e segurança
 
 - [x] 1.1 Revalidar árvore de trabalho, branch atual, URL/estado de `origin` e refs remotos; confirmar `main` como origem de publicação e interromper sem force push se houver divergência ou conteúdo remoto inesperado.
-- [x] 1.2 Revisar arquivos rastreados e alterações documentais em busca de `.env` local, chaves privadas, credenciais e artefatos gerados; confirmar que nenhum segredo será incluído no commit nem no push.
+- [x] 1.2 Revisar arquivos rastreados, incluindo `opencode.json`, e alterações documentais em busca de `.env` local, chaves privadas, credenciais e artefatos gerados; confirmar que nenhum segredo será incluído no commit nem no push.
 
 ## 2. Documentação do repositório
 
@@ -13,7 +13,7 @@
 
 ## 3. Publicação da branch principal
 
-- [ ] 3.1 Configurar `origin` com a URL SSH indicada e criar o commit das alterações documentais em `main`; verificar `git remote -v`, o diff do commit e uma árvore de trabalho limpa, sem alterar ou remover a branch local `dev`.
+- [ ] 3.1 Configurar `origin` com a URL SSH indicada e revisar o commit em `main`, incluindo documentação, artifacts OpenSpec e o `opencode.json` autorizado; verificar `git remote -v`, o diff do commit e que não reste alteração não commitada desta change, preservando `dev` e outros arquivos não relacionados.
 - [ ] 3.2 Publicar `main` sem reescrever histórico, somente após confirmar que o push é novo ou fast-forward; verificar com `git ls-remote` que a ref remota `main` corresponde ao commit local e parar para decisão se o remoto tiver divergido.
 - [ ] 3.3 Confirmar no GitHub que `main` está definida como branch padrão; se necessário, ajustar somente essa configuração e verificar que visibilidade e permissões do repositório permaneceram inalteradas.
 
