@@ -13,7 +13,7 @@
 
 ## 3. Publicação da branch principal
 
-- [ ] 3.1 Configurar `origin` com a URL SSH indicada e revisar o commit em `main`, incluindo documentação, artifacts OpenSpec e o `opencode.json` autorizado; verificar `git remote -v`, o diff do commit e que não reste alteração não commitada desta change, preservando `dev` e outros arquivos não relacionados.
+- [x] 3.1 Configurar `origin` com a URL SSH indicada e revisar o commit em `main`, incluindo documentação, artifacts OpenSpec e o `opencode.json` autorizado; verificar `git remote -v`, o diff do commit e que não reste alteração não commitada desta change, preservando `dev` e outros arquivos não relacionados.
 - [ ] 3.2 Publicar `main` sem reescrever histórico, somente após confirmar que o push é novo ou fast-forward; verificar com `git ls-remote` que a ref remota `main` corresponde ao commit local e parar para decisão se o remoto tiver divergido.
 - [ ] 3.3 Confirmar no GitHub que `main` está definida como branch padrão; se necessário, ajustar somente essa configuração e verificar que visibilidade e permissões do repositório permaneceram inalteradas.
 
