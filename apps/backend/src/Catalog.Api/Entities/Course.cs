@@ -6,6 +6,8 @@ public sealed class Course
     public required string FullName { get; set; }
     public required string ShortName { get; set; }
     public required string Description { get; set; }
+    public required string ShortDescription { get; set; }
+    public required string PresentationJson { get; set; }
     public int CategoryId { get; set; }
     public Category Category { get; set; } = null!;
     public int ModalityId { get; set; }

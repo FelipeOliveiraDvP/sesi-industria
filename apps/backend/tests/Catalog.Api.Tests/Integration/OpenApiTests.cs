@@ -45,10 +45,30 @@ public sealed class OpenApiTests(PostgreSqlFixture postgres)
             .TryGetProperty("404", out _));
 
         var schemas = document.GetProperty("components").GetProperty("schemas");
-        foreach (var schema in new[] { "CourseListResponse", "CourseSummaryDto", "CourseDetailDto", "CourseModuleDto", "LessonDto", "LookupDto" })
+        foreach (var schema in new[]
+        {
+            "CourseListResponse", "CourseSummaryDto", "CourseDetailDto", "CourseModuleDto", "LessonDto", "LookupDto",
+            "CoursePresentationDto", "CourseTextSectionDto", "CourseTextSectionWithConclusionDto", "CourseFaqDto",
+            "LearningPreviewDto", "LearningIntroductionDto", "LearningItemDto", "LearningModuleDto",
+            "LearningLessonDto", "LearningArticleDto"
+        })
         {
             Assert.True(schemas.TryGetProperty(schema, out _), schema);
         }
+
+        var summaryProperties = schemas.GetProperty("CourseSummaryDto").GetProperty("properties");
+        Assert.True(summaryProperties.TryGetProperty("description", out _));
+        Assert.True(summaryProperties.TryGetProperty("shortDescription", out _));
+        var detailProperties = schemas.GetProperty("CourseDetailDto").GetProperty("properties");
+        Assert.True(detailProperties.TryGetProperty("shortDescription", out _));
+        Assert.True(detailProperties.TryGetProperty("presentation", out _));
+        var presentationProperties = schemas.GetProperty("CoursePresentationDto").GetProperty("properties");
+        Assert.True(presentationProperties.TryGetProperty("detailsImageUrl", out _));
+        var learningProperties = schemas.GetProperty("LearningPreviewDto").GetProperty("properties");
+        Assert.True(learningProperties.TryGetProperty("bannerImageUrl", out _));
+        Assert.True(schemas.GetProperty("LearningModuleDto").GetProperty("properties").TryGetProperty("lessons", out _));
+        Assert.True(schemas.GetProperty("LearningLessonDto").GetProperty("properties").TryGetProperty("description", out _));
+        Assert.False(presentationProperties.TryGetProperty("detailsImagePath", out _));
     }
 
     [Fact]

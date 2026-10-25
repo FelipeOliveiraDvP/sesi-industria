@@ -7,50 +7,106 @@
 .header {
   display: flex;
   min-height: 3rem;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
+  align-items: flex-start;
 }
 
 .heading {
   min-width: 0;
 }
 
+.footer {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footerContent {
+  min-width: 0;
+}
+
 .controls {
   display: flex;
   flex: 0 0 auto;
+  margin-inline-start: auto;
   gap: 0.625rem;
 }
 
 .controls button {
   color: #0c0c0d;
-  border-color: rgb(12 12 13 / 18%);
-  background: #ffffff;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
 }
 
 .controls button:not(:disabled):hover {
   color: #890000;
-  background: #fff5f3;
+  background: transparent;
+}
+
+.controls button:focus-visible {
+  outline: 2px solid #890000;
+  outline-offset: 2px;
 }
 
 .controls button:disabled {
   color: #77706f;
-  background: #f4f1f0;
-  opacity: 0.72;
+  background: transparent;
+  opacity: 0.58;
+}
+
+.lightControls button {
+  color: #ffffff;
+}
+
+.lightControls button:not(:disabled):hover {
+  color: #ffffff;
+}
+
+.lightControls button:focus-visible {
+  outline-color: #ffffff;
+}
+
+.lightControls button:disabled {
+  color: #ffffff;
 }
 
 .controls img {
   display: block;
 }
 
+.lightControls img {
+  filter: brightness(0) invert(1);
+}
+
 .viewport {
   min-width: 0;
   overflow-x: auto;
+  overflow-anchor: none;
   overscroll-behavior-inline: contain;
   scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
-  scrollbar-color: #890000 #f2e9e6;
-  scrollbar-width: thin;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  cursor: grab;
+}
+
+.viewport::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.viewport[data-dragging='true'],
+.viewport[data-dragging='true'] * {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.viewport[data-dragging='true'] {
+  scroll-behavior: auto;
+  scroll-snap-type: none;
 }
 
 .viewport:focus-visible {
@@ -62,7 +118,7 @@
     gap: 1rem;
   }
 
-  .header {
+  .footer {
     gap: 0.75rem;
   }
 

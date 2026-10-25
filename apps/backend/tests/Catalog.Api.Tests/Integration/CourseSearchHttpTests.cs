@@ -28,6 +28,9 @@ public sealed class CourseSearchHttpTests(PostgreSqlFixture postgres)
             Assert.True(item.GetProperty("id").GetInt32() > 0);
             Assert.False(string.IsNullOrWhiteSpace(item.GetProperty("fullName").GetString()));
             Assert.False(string.IsNullOrWhiteSpace(item.GetProperty("shortName").GetString()));
+            Assert.False(string.IsNullOrWhiteSpace(item.GetProperty("description").GetString()));
+            Assert.False(string.IsNullOrWhiteSpace(item.GetProperty("shortDescription").GetString()));
+            Assert.StartsWith("http://127.0.0.1:5173/assets/", item.GetProperty("imageUrl").GetString());
             foreach (var classification in new[] { "category", "modality", "status" })
             {
                 Assert.True(item.GetProperty(classification).GetProperty("id").GetInt32() > 0);
@@ -38,10 +41,11 @@ public sealed class CourseSearchHttpTests(PostgreSqlFixture postgres)
     }
 
     [Theory]
-    [InlineData("Fundamentos de Tecnologia Educacional", 1)]
-    [InlineData("Conecta", 4)]
-    [InlineData("nologia", 1)]
-    [InlineData("  tEcEdU  ", 1)]
+    [InlineData("Matemática para a Precisão: Medidas e Escalas na Metalurgia", 1)]
+    [InlineData("Física Industrial", 4)]
+    [InlineData("Precisão", 1)]
+    [InlineData("  mEtRoLoGiA  ", 1)]
+    [InlineData("GeoTêxtil", 2)]
     public async Task SearchesFullNameOrShortNameAsCaseInsensitiveSubstring(string search, int expectedId)
     {
         await using var factory = new CatalogApiFactory(await postgres.CreateMigratedDatabaseAsync());
@@ -78,6 +82,19 @@ public sealed class CourseSearchHttpTests(PostgreSqlFixture postgres)
         using var response = await client.GetAsync($"/api/courses?search={Uri.EscapeDataString(search)}");
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var result = await response.Content.ReadFromJsonAsync<CourseListResponse>();
+        Assert.NotNull(result);
+        Assert.Empty(result.Items);
+        Assert.Equal(0, result.TotalCount);
+    }
+
+    [Fact]
+    public async Task SearchDoesNotMatchCourseDescriptions()
+    {
+        await using var factory = new CatalogApiFactory(await postgres.CreateMigratedDatabaseAsync());
+        using var client = factory.CreateClient();
+
+        var result = await client.GetFromJsonAsync<CourseListResponse>("/api/courses?search=fura%C3%A7%C3%A3o");
+
         Assert.NotNull(result);
         Assert.Empty(result.Items);
         Assert.Equal(0, result.TotalCount);

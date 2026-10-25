@@ -1,0 +1,49 @@
+# Repository metadata and local tooling state
+.git
+**/.git
+.playwright-mcp
+**/.playwright-mcp
+
+# Local environment/configuration files; none are required in a build context
+.env
+.env.*
+**/.env
+**/.env.*
+appsettings.Local.json
+appsettings.*.Local.json
+appsettings.*.local.json
+**/appsettings.Local.json
+**/appsettings.*.Local.json
+**/appsettings.*.local.json
+
+# Installed dependencies and generated application output
+node_modules
+**/node_modules
+bin
+**/bin
+obj
+**/obj
+dist
+**/dist
+artifacts
+**/artifacts
+TestResults
+**/TestResults
+coverage
+**/coverage
+playwright-report
+**/playwright-report
+
+# Logs and local-only database/storage directories
+*.log
+**/*.log
+logs
+**/logs
+postgres-data
+**/postgres-data
+.postgres
+**/.postgres
+
+# Test and editor output
+*.trx
+**/*.trx

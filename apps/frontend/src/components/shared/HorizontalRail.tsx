@@ -1,5 +1,15 @@
 import { ActionIcon } from '@mantine/core'
-import { useCallback, useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type MouseEvent,
+  type PointerEvent,
+  type ReactNode,
+} from 'react'
 import { assetPaths } from '../../app/assets'
 import classes from './HorizontalRail.module.css'
 
@@ -7,11 +17,15 @@ type HorizontalRailProps = {
   children: ReactNode
   label: string
   heading?: ReactNode
+  footer?: ReactNode
+  controlsTone?: 'dark' | 'light'
 }
 
-export function HorizontalRail({ children, label, heading }: HorizontalRailProps) {
+export function HorizontalRail({ children, label, heading, footer, controlsTone = 'dark' }: HorizontalRailProps) {
   const viewportRef = useRef<HTMLDivElement>(null)
   const viewportId = useId()
+  const dragRef = useRef<{ pointerId: number; startX: number; startScrollLeft: number; moved: boolean } | null>(null)
+  const suppressClickRef = useRef(false)
   const [canScrollBackward, setCanScrollBackward] = useState(false)
   const [canScrollForward, setCanScrollForward] = useState(false)
 
@@ -63,35 +77,75 @@ export function HorizontalRail({ children, label, heading }: HorizontalRailProps
     }
   }
 
+  const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => {
+    const viewport = viewportRef.current
+    if (
+      !viewport
+      || event.pointerType === 'touch'
+      || event.button !== 0
+      || !event.isPrimary
+      || viewport.scrollWidth <= viewport.clientWidth
+    ) return
+
+    const target = event.target
+    if (!(target instanceof Element) || target.closest('button, input, select, textarea, [contenteditable="true"]')) return
+
+    dragRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startScrollLeft: viewport.scrollLeft,
+      moved: false,
+    }
+    target.setPointerCapture(event.pointerId)
+  }
+
+  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
+    const viewport = viewportRef.current
+    const drag = dragRef.current
+    if (!viewport || !drag || drag.pointerId !== event.pointerId) return
+
+    const distance = event.clientX - drag.startX
+    if (!drag.moved && Math.abs(distance) > 5) {
+      drag.moved = true
+      viewport.dataset.dragging = 'true'
+      window.getSelection()?.removeAllRanges()
+    }
+
+    if (!drag.moved) return
+    if (event.cancelable) event.preventDefault()
+    viewport.scrollLeft = drag.startScrollLeft - distance
+  }
+
+  const finishPointerDrag = (event: PointerEvent<HTMLDivElement>, suppressClick: boolean) => {
+    const drag = dragRef.current
+    if (!drag || drag.pointerId !== event.pointerId) return
+
+    dragRef.current = null
+    viewportRef.current?.removeAttribute('data-dragging')
+
+    if (suppressClick && drag.moved) {
+      suppressClickRef.current = true
+      window.setTimeout(() => {
+        suppressClickRef.current = false
+      }, 0)
+    }
+  }
+
+  const handleClickCapture = (event: MouseEvent<HTMLDivElement>) => {
+    if (!suppressClickRef.current || event.detail === 0) return
+
+    event.preventDefault()
+    event.stopPropagation()
+    suppressClickRef.current = false
+  }
+
   return (
     <div className={classes.root}>
-      <div className={classes.header}>
-        <div className={classes.heading}>{heading}</div>
-        <div className={classes.controls}>
-          <ActionIcon
-            type="button"
-            variant="outline"
-            size="lg"
-            aria-label={`Voltar no trilho: ${label}`}
-            aria-controls={viewportId}
-            disabled={!canScrollBackward}
-            onClick={() => scroll('backward')}
-          >
-            <img src={assetPaths.controls.previous} alt="" width="24" height="24" />
-          </ActionIcon>
-          <ActionIcon
-            type="button"
-            variant="outline"
-            size="lg"
-            aria-label={`Avançar no trilho: ${label}`}
-            aria-controls={viewportId}
-            disabled={!canScrollForward}
-            onClick={() => scroll('forward')}
-          >
-            <img src={assetPaths.controls.next} alt="" width="24" height="24" />
-          </ActionIcon>
+      {heading && (
+        <div className={classes.header}>
+          <div className={classes.heading}>{heading}</div>
         </div>
-      </div>
+      )}
 
       <div
         id={viewportId}
@@ -102,8 +156,42 @@ export function HorizontalRail({ children, label, heading }: HorizontalRailProps
         aria-roledescription="carrossel"
         tabIndex={0}
         onKeyDown={handleKeyDown}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={(event) => finishPointerDrag(event, true)}
+        onPointerCancel={(event) => finishPointerDrag(event, false)}
+        onLostPointerCapture={(event) => finishPointerDrag(event, false)}
+        onClickCapture={handleClickCapture}
       >
         {children}
+      </div>
+
+      <div className={classes.footer}>
+        {footer && <div className={classes.footerContent}>{footer}</div>}
+        <div className={`${classes.controls}${controlsTone === 'light' ? ` ${classes.lightControls}` : ''}`}>
+          <ActionIcon
+            type="button"
+            variant="transparent"
+            size="lg"
+            aria-label={`Voltar no trilho: ${label}`}
+            aria-controls={viewportId}
+            disabled={!canScrollBackward}
+            onClick={() => scroll('backward')}
+          >
+            <img src={assetPaths.controls.previous} alt="" width="24" height="24" />
+          </ActionIcon>
+          <ActionIcon
+            type="button"
+            variant="transparent"
+            size="lg"
+            aria-label={`Avançar no trilho: ${label}`}
+            aria-controls={viewportId}
+            disabled={!canScrollForward}
+            onClick={() => scroll('forward')}
+          >
+            <img src={assetPaths.controls.next} alt="" width="24" height="24" />
+          </ActionIcon>
+        </div>
       </div>
     </div>
   )

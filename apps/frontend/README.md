@@ -1,6 +1,6 @@
 # SESI Indústria — frontend
 
-Single-page React app for the documented SESI Indústria screens. It runs independently of the .NET API, PostgreSQL and Docker.
+Single-page React app for the documented SESI Indústria screens. The development server, typecheck and build run independently of the .NET API, PostgreSQL and Docker, but course data on Landing, Details and AVA is loaded from the configured API.
 
 ## Requirements and commands
 
@@ -10,26 +10,59 @@ Single-page React app for the documented SESI Indústria screens. It runs indepe
 Run these commands from the repository root:
 
 ```sh
+[ -f apps/frontend/.env.local ] || cp apps/frontend/.env.example apps/frontend/.env.local
 pnpm install
-pnpm --filter @sesi/frontend dev --host 127.0.0.1
+pnpm --filter @sesi/frontend dev --host 127.0.0.1 --port 5173 --strictPort
 pnpm --filter @sesi/frontend typecheck
 pnpm --filter @sesi/frontend build
-pnpm --filter @sesi/frontend preview --host 127.0.0.1
+pnpm --filter @sesi/frontend preview --host 127.0.0.1 --port 4173 --strictPort
 ```
 
 `dev` serves the app locally. `build` runs the strict TypeScript checks before creating `apps/frontend/dist`; `preview` serves that build locally and is not a production server.
 
+## Production Docker image
+
+Build from the repository root. The Dockerfile installs the root pnpm workspace with the frozen lockfile, builds the frontend, and serves only `dist` using Nginx:
+
+```sh
+docker build --file apps/frontend/Dockerfile --tag catalog-frontend:local \
+  --build-arg VITE_API_BASE_URL=https://api.example .
+docker run --rm --publish 8080:8080 --env PORT=8080 catalog-frontend:local
+```
+
+Replace `https://api.example` with the public API origin used by the target deployment. The build requires a valid `VITE_API_BASE_URL`; missing values and values containing credentials, a subpath, query, or fragment fail the build. This `VITE_` value is public and compiled into the browser bundle, not a secret or runtime setting. Rebuild the image when the API origin changes; changing `VITE_API_BASE_URL` only when starting the Nginx container does not change the compiled bundle. `PORT` is a runtime setting and defaults to `8080`. Nginx serves the SPA fallback while keeping missing static assets as 404 responses. Use `vite preview` only for local preview, not production. See the [Railway deployment guide](../../docs/deploy-railway.md) for service configuration.
+
+## API configuration and cache
+
+The frontend reads `VITE_API_BASE_URL`, an absolute HTTP or HTTPS API origin. The local default is `http://localhost:5080`; `apps/frontend/.env.example` shows the development value. For local customization, copy it to `apps/frontend/.env.local` (ignored by Git), or set the variable in the shell before starting Vite/building. Vite loads environment files at startup. `VITE_` values are public and embedded in the client bundle: never put credentials, tokens or other secrets there.
+
+The API client uses a 10-second timeout. Course queries use an in-memory cache that considers data fresh for 60 seconds and retains unused entries for five minutes; it is not persisted to browser storage. Details and AVA share the same cached detail for a course ID. A new build is required when changing the API URL used by preview or a deployed static bundle; starting preview does not replace the value already compiled into the files.
+
+`FRONTEND_URL` selects the frontend host used in image URLs: use `http://127.0.0.1:5173` for development and `http://127.0.0.1:4173` for preview, and restart the API when switching. Catalog GET requests accept any browser origin without credentials; this does not change the configured API base (`VITE_API_BASE_URL`).
+
 ## Routes
 
-| Path | Screen |
+| Path | Screen / data request |
 | --- | --- |
-| `/` | Landing |
-| `/cursos/matematica-para-a-precisao` | Course details |
-| `/ava/matematica-para-a-precisao` | Learning environment preview |
+| `/` | Landing; `GET /api/courses` |
+| `/cursos/:courseId` | Details for a positive integer ID; `GET /api/courses/{id}` |
+| `/ava/:courseId` | AVA preview for the same ID/detail response |
+| `/cursos/matematica-para-a-precisao` | Legacy alias; replaces history with `/cursos/1` |
+| `/ava/matematica-para-a-precisao` | Legacy alias; replaces history with `/ava/1` |
 
-Unknown paths show an accessible not-found page with a link to the Landing. The frontend uses local static content only; it does not require API or database setup.
+Invalid IDs and unknown paths show an accessible not-found page. A well-formed ID missing from the API shows a course-not-found state; direct entry and refresh do not depend on visiting the Landing first. All course cards use the ID from the list response, preserve its order, and do not request one detail per card. The application uses only the two catalog GET endpoints; it adds no search/filter UI or catalog page, and does not enroll users, navigate lessons, save progress, or call write endpoints.
+
+Static institutional sections and assets remain available without the backend; course-specific content requires the API and does not silently fall back to local fixtures. The course and AVA preview share the same detail cache key for the selected ID.
 
 For static hosting, configure a history fallback that rewrites application routes to `index.html` while leaving missing static assets as 404 responses.
+
+## Loading, errors and recovery
+
+On the first request, Landing, Details and AVA show Mantine skeletons that reserve the page layout; they do not expose placeholder course titles or enrollment actions. The loading state is announced to assistive technology, the skeleton shapes are decorative, and non-essential shimmer is disabled when reduced motion is requested. Institutional content and local assets remain available when the API is offline, but course data does not fall back to fixtures, so this is not a fully offline catalog.
+
+The API's normal outcomes remain distinct: an empty collection reports that no courses are available, and a `404` detail reports that the course was not found. Network, timeout and server (`5xx`) failures receive at most one automatic retry, followed by an explicit `Tentar novamente` action; incompatible API responses are also recoverable but are not retried automatically. A failed background refresh keeps the valid data for that same course visible and offers a retry rather than replacing the page with skeletons. A course ID is never filled with another course's data.
+
+Rendering exceptions are a separate failure class from HTTP or network errors. The React Error Boundary shows a generic recovery/return state for an unexpected rendering failure; the query error states handle API responses and connectivity. Neither state exposes stack traces or raw server details.
 
 ## Visual references and local assets
 
@@ -49,16 +82,18 @@ The page copy and observed interactions are transcribed in `docs/figma-reverse-e
 
 ## Landing (`/`)
 
-The Landing contains the industrial hero, six featured course cards, static impact metrics and benefits, five testimonials, a final call to action and the shared footer. `Cursos` and `Conhecer cursos` scroll to the course rail; the first card and `Matricule-se` open the documented course details route. The course and testimonial rails are local, finite carousels with keyboard and arrow-button controls.
+The Landing contains the industrial hero, the API-ordered course cards, static impact metrics and benefits, five testimonials, a final call to action and the shared footer. `Cursos` and `Conhecer cursos` scroll to the course rail; each card opens its own ID route, while the lower `Matricule-se` reference CTA opens course 1. The course and testimonial rails are local, finite carousels with keyboard and arrow-button controls.
 
 Other course cards, `Todos os cursos`, `Ver todos os cursos`, `Sobre`, `Área do aluno` and footer destinations are unavailable in this demonstration and do not open additional pages. The play mark on the local thumbnail is illustrative and does not play media. Impact values are static reference copy, not live statistics. No catalog, login, video playback or actual enrollment flow is implemented.
 
-## Course details (`/cursos/matematica-para-a-precisao`)
+## Course details (`/cursos/:courseId`)
 
-The details screen includes the reference date (`05/01/2026`), SESI certification label, four benefit descriptions, and three initially closed accordions. The accordion sections expand independently and may remain open together. The enrollment bar appears after scrolling past the hero; both `Matricule-se` links open the AVA preview, and `Início` returns to the Landing. The bar reserves room at the end of the page so the footer remains reachable.
+The details screen uses the selected API detail for title, category, date, certification, image, full description, relational modules/lessons, lesson/assessment copy and FAQs. Dates are formatted from calendar values without timezone conversion; a null date appears as `A definir`. The four institutional benefits, testimonials, contact section and footer remain shared local content. Accordions expand independently; the enrollment bar appears after scrolling past the hero, and both `Matricule-se` links open the AVA for the same ID.
 
 The modules, lesson, assessment and FAQ copy is transcribed from the visual reference. Mentions of exams, forums, antifraud measures and certificates are informational copy only; none of those services or operations are implemented. The contact CTA `Mandar uma mensagem` is unavailable and does not open a form or send a message. The date and certification are static display values, not enrollment or credential data.
 
-## Learning environment preview (`/ava/matematica-para-a-precisao`)
+## Learning environment preview (`/ava/:courseId`)
 
-The AVA preview presents the local banner and the complete seven-paragraph `Boas práticas` and `Recomendações` article. Its sidebar shows the documented lesson states and six generic, collapsed module labels. Progress is a fixed 10% demonstration value and does not change or persist. The search field and lesson/module items are illustrative and do not filter content, navigate to lessons or record completion. The return arrow always opens the course details route, including after direct entry. This is not an authenticated or functional LMS, and opening it does not enroll the visitor.
+The AVA preview uses the same course detail as Details: the API provides its banner, sidebar identity, generic module-and-lesson outline, article, and recommendations. All six courses receive the same six generic modules with two lesson descriptions each; this AVA outline is separate from the course-specific relational curriculum shown in Details. Modules expand locally to show their lessons, which remain read-only text and do not navigate or record completion. Progress is fixed at 10%. Desktop and mobile return controls open `/cursos/{sameId}`, including after direct entry. This is not an authenticated or functional LMS, and opening it does not enroll the visitor.
+
+While its data is loading or unavailable, the AVA keeps a route-specific return to `/cursos/{sameId}` available. The displayed 10% is fixed editorial demonstration data only: it is not a learner's progress, is not updated by reading, and is never written to server or browser storage.

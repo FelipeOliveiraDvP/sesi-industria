@@ -27,8 +27,8 @@ public sealed class CourseDetailHttpTests(PostgreSqlFixture postgres)
         using var response = await client.GetAsync($"/api/courses/{id}");
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var json = await response.Content.ReadFromJsonAsync<JsonElement>();
-        var expectedFields = new[] { "id", "fullName", "shortName", "description", "category", "modality",
-            "status", "workloadHours", "targetAudience", "imageUrl", "availableOn", "modules" };
+        var expectedFields = new[] { "id", "fullName", "shortName", "description", "shortDescription", "category", "modality",
+            "status", "workloadHours", "targetAudience", "imageUrl", "availableOn", "modules", "presentation" };
         Assert.Equal(expectedFields.Order().ToArray(), json.EnumerateObject().Select(property => property.Name).Order().ToArray());
         var actual = json.Deserialize<CourseDetailDto>(new JsonSerializerOptions(JsonSerializerDefaults.Web));
         Assert.NotNull(actual);
@@ -37,9 +37,18 @@ public sealed class CourseDetailHttpTests(PostgreSqlFixture postgres)
         Assert.Equal(expected.FullName, actual.FullName);
         Assert.Equal(expected.ShortName, actual.ShortName);
         Assert.Equal(expected.Description, actual.Description);
+        Assert.Equal(expected.ShortDescription, actual.ShortDescription);
         Assert.Equal(expected.WorkloadHours, actual.WorkloadHours);
         Assert.Equal(expected.TargetAudience, actual.TargetAudience);
-        Assert.Equal(expected.ImageUrl, actual.ImageUrl);
+        Assert.Equal("http://127.0.0.1:5173" + expected.ImageUrl, actual.ImageUrl);
+        Assert.Equal("http://127.0.0.1:5173/assets/video-thumb.png", actual.Presentation.DetailsImageUrl);
+        Assert.Equal("http://127.0.0.1:5173/assets/banner-ava.png", actual.Presentation.LearningPreview.BannerImageUrl);
+        Assert.Equal(10, actual.Presentation.Faqs.Count);
+        Assert.Equal(3, actual.Presentation.LearningPreview.Article.Paragraphs.Count);
+        Assert.Equal(4, actual.Presentation.LearningPreview.Recommendations.Paragraphs.Count);
+        Assert.Equal(6, actual.Presentation.LearningPreview.Modules.Count);
+        Assert.All(actual.Presentation.LearningPreview.Modules, previewModule =>
+            Assert.Equal(2, previewModule.Lessons.Count));
         Assert.Equal(expected.AvailableOn, actual.AvailableOn);
         if (expected.AvailableOn is null)
         {
@@ -67,6 +76,26 @@ public sealed class CourseDetailHttpTests(PostgreSqlFixture postgres)
                 Assert.Equal(expectedLesson.DisplayOrder, lesson.Order);
             }
         }
+    }
+
+    [Fact]
+    public async Task ReturnsTheSameGenericAvaOutlineForAllCourseIds()
+    {
+        await using var factory = new CatalogApiFactory(await postgres.CreateMigratedDatabaseAsync());
+        using var client = factory.CreateClient();
+        var details = new List<CourseDetailDto>();
+
+        foreach (var id in Enumerable.Range(1, 6))
+        {
+            var detail = await client.GetFromJsonAsync<CourseDetailDto>($"/api/courses/{id}");
+            Assert.NotNull(detail);
+            details.Add(detail);
+        }
+
+        var expectedOutline = JsonSerializer.Serialize(details[0].Presentation.LearningPreview.Modules);
+        Assert.All(details.Skip(1), detail =>
+            Assert.Equal(expectedOutline, JsonSerializer.Serialize(detail.Presentation.LearningPreview.Modules)));
+        Assert.NotEqual(details[0].Modules[0].Title, details[1].Modules[0].Title);
     }
 
     [Fact]

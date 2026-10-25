@@ -25,6 +25,8 @@ public sealed class SeedInitializationTests(PostgreSqlFixture postgres)
 
             var course = await context.Courses.SingleAsync(course => course.Id == 1);
             course.Description = "Descrição preservada durante teste de idempotência.";
+            course.ShortDescription = "Resumo preservado durante teste de idempotência.";
+            course.PresentationJson = "{}";
             context.Categories.Add(new Category { Id = 9000, Name = "Categoria adicional de teste" });
             await context.SaveChangesAsync();
         }
@@ -33,8 +35,10 @@ public sealed class SeedInitializationTests(PostgreSqlFixture postgres)
         var before = await CountsAsync(repeated);
         await MigrateAsync(repeated, asynchronous);
         Assert.Equal(before, await CountsAsync(repeated));
-        Assert.Equal("Descrição preservada durante teste de idempotência.",
-            (await repeated.Courses.AsNoTracking().SingleAsync(course => course.Id == 1)).Description);
+        var preservedCourse = await repeated.Courses.AsNoTracking().SingleAsync(course => course.Id == 1);
+        Assert.Equal("Descrição preservada durante teste de idempotência.", preservedCourse.Description);
+        Assert.Equal("Resumo preservado durante teste de idempotência.", preservedCourse.ShortDescription);
+        Assert.Equal("{}", preservedCourse.PresentationJson);
         Assert.True(await repeated.Categories.AnyAsync(category => category.Id == 9000));
         Assert.Empty(await repeated.Database.GetPendingMigrationsAsync());
     }

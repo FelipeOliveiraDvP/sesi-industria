@@ -191,18 +191,73 @@
   border-left: 0.32rem solid #0c0c0d;
 }
 
-.moduleItems li {
-  min-height: 2.3rem;
+.moduleItem {
   border-top: 1px solid #dcd9d8;
+}
+
+.moduleButton {
+  display: flex;
+  width: 100%;
+  min-height: 2.3rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border: 0;
   padding: 0.55rem 1rem;
   color: #0c0c0d;
+  background: #ffffff;
+  font: inherit;
   font-size: 0.8125rem;
   font-weight: 700;
   line-height: 1.35;
+  text-align: left;
+  cursor: pointer;
 }
 
-.moduleItems li[aria-disabled="true"] {
-  cursor: not-allowed;
+.moduleButton:hover {
+  background: #f7f5f4;
+}
+
+.moduleChevron {
+  width: 0.45rem;
+  height: 0.45rem;
+  flex: 0 0 auto;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg) translateY(-0.1rem);
+  transition: transform 120ms ease;
+}
+
+.moduleChevronExpanded {
+  transform: rotate(225deg) translateY(-0.1rem);
+}
+
+.moduleLessons {
+  margin: 0;
+  padding: 0 1rem 0.5rem;
+  list-style: none;
+}
+
+.moduleLessons[hidden] {
+  display: none;
+}
+
+.moduleLesson {
+  border-top: 1px solid #ebe8e7;
+  padding: 0.65rem 0.25rem;
+  color: #4f4a49;
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.moduleLessonLabel {
+  display: block;
+  color: #0c0c0d;
+  font-weight: 600;
+}
+
+.moduleLesson p {
+  margin: 0.25rem 0 0;
 }
 
 .visuallyHidden {

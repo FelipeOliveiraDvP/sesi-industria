@@ -4,6 +4,8 @@ public sealed record CourseSummaryDto(
     int Id,
     string FullName,
     string ShortName,
+    string Description,
+    string ShortDescription,
     LookupDto Category,
     LookupDto Modality,
     LookupDto Status,

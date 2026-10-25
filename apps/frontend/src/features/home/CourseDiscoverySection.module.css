@@ -49,6 +49,51 @@
   text-align: left;
 }
 
+.skeletonCard {
+  background: #890000;
+}
+
+.skeletonImage {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: #6f0000;
+}
+
+.skeletonCategory {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  width: 9rem;
+  height: 1.75rem;
+}
+
+.skeletonCopy {
+  position: absolute;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.skeletonTitle {
+  height: 1.5rem;
+  width: 90%;
+}
+
+.skeletonDescription {
+  height: 0.75rem;
+  width: 100%;
+}
+
+.skeletonDescriptionShort {
+  height: 0.75rem;
+  width: 72%;
+}
+
 .visuallyHidden {
   position: absolute;
   width: 1px;
@@ -147,8 +192,7 @@
 
 .allCoursesAction {
   display: flex;
-  justify-content: center;
-  padding-top: 2rem;
+  justify-content: flex-start;
 }
 
 .allCoursesButton {

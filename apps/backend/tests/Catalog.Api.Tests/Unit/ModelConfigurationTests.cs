@@ -28,6 +28,7 @@ public sealed class ModelConfigurationTests
     [InlineData(typeof(Course), nameof(Course.FullName), 200)]
     [InlineData(typeof(Course), nameof(Course.ShortName), 80)]
     [InlineData(typeof(Course), nameof(Course.Description), 4000)]
+    [InlineData(typeof(Course), nameof(Course.ShortDescription), 1000)]
     [InlineData(typeof(Course), nameof(Course.TargetAudience), 1000)]
     [InlineData(typeof(Course), nameof(Course.ImageUrl), 512)]
     [InlineData(typeof(Category), nameof(Category.Name), 120)]
@@ -42,6 +43,16 @@ public sealed class ModelConfigurationTests
         var property = Model.FindEntityType(entity)!.FindProperty(name)!;
         Assert.False(property.IsNullable);
         Assert.Equal(length, property.GetMaxLength());
+    }
+
+    [Fact]
+    public void RequiresPresentationJsonAsJsonb()
+    {
+        var property = Model.FindEntityType(typeof(Course))!
+            .FindProperty(nameof(Course.PresentationJson))!;
+
+        Assert.False(property.IsNullable);
+        Assert.Equal("jsonb", property.GetColumnType());
     }
 
     [Fact]

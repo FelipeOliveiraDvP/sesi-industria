@@ -14,6 +14,8 @@ public sealed class CourseConfiguration : IEntityTypeConfiguration<Course>
         builder.Property(course => course.FullName).IsRequired().HasMaxLength(200);
         builder.Property(course => course.ShortName).IsRequired().HasMaxLength(80);
         builder.Property(course => course.Description).IsRequired().HasMaxLength(4000);
+        builder.Property(course => course.ShortDescription).IsRequired().HasMaxLength(1000);
+        builder.Property(course => course.PresentationJson).IsRequired().HasColumnType("jsonb");
         builder.Property(course => course.TargetAudience).IsRequired().HasMaxLength(1000);
         builder.Property(course => course.ImageUrl).IsRequired().HasMaxLength(512);
         builder.Property(course => course.WorkloadHours).IsRequired().HasPrecision(7, 2);

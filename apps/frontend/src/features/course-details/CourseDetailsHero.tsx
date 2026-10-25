@@ -1,40 +1,46 @@
 import { Link } from 'react-router-dom'
 import { assetPaths } from '../../app/assets'
-import { routePaths } from '../../app/routes'
-import { course } from '../../mocks/course-details'
+import { learningEnvironmentPath } from '../../app/course-paths'
 import { courseBenefits } from '../../mocks/marketing'
 import { BenefitList } from '../../components/shared/BenefitList'
 import { VideoPreview } from '../../components/shared/VideoPreview'
+import { formatCourseDate } from '../courses/format'
+import type { CourseDetail } from '../courses/types'
 import classes from './CourseDetailsHero.module.css'
 
-export function CourseDetailsHero() {
+export function CourseDetailsHero({ course }: { course: CourseDetail }) {
+  const categoryIcon = course.category.name === 'Matemática'
+    ? assetPaths.categories.mathematics
+    : assetPaths.categories.naturalSciences
+
   return (
     <>
       <section className={classes.hero} aria-labelledby="course-title">
         <div className={classes.container}>
           <div className={classes.copy}>
             <span className={classes.badge}>
-              <img src={assetPaths.categories.mathematics} alt="" width="20" height="20" />
-              {course.category}
+              <img src={categoryIcon} alt="" width="20" height="20" />
+              {course.category.name}
             </span>
-            <h1 id="course-title">{course.title}</h1>
+            <h1 id="course-title">{course.fullName}</h1>
             <dl className={classes.metadata}>
               <div>
                 <dt>Início do curso</dt>
-                <dd><MetadataIcon kind="calendar" />{course.startDate}</dd>
+                <dd><MetadataIcon kind="calendar" />{formatCourseDate(course.availableOn)}</dd>
               </div>
               <div>
                 <dt>Certificação</dt>
-                <dd><MetadataIcon kind="certificate" />{course.certification}</dd>
+                <dd><MetadataIcon kind="certificate" />{course.presentation.certification}</dd>
               </div>
             </dl>
-            <Link className={classes.enrollLink} to={routePaths.learningEnvironment} aria-describedby="enrollment-demo-note">
+            <Link className={classes.enrollLink} to={learningEnvironmentPath(course.id)} aria-describedby="enrollment-demo-note">
               Matricule-se <span aria-hidden="true">→</span>
             </Link>
             <p id="enrollment-demo-note" className={classes.visuallyHidden}>Abre uma prévia demonstrativa do ambiente de aprendizagem. Nenhuma matrícula é realizada.</p>
           </div>
 
-          <VideoPreview description="Prévia ilustrativa do curso. A reprodução de vídeo não está disponível nesta demonstração." />
+          <VideoPreview imageUrl={course.imageUrl} imageAlt="Imagem ilustrativa de uma atividade industrial."
+            description="Prévia ilustrativa do curso. A reprodução de vídeo não está disponível nesta demonstração." />
         </div>
       </section>
       <div id="course-hero-end" className={classes.marker} aria-hidden="true" />

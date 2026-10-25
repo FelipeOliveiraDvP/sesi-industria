@@ -16,6 +16,7 @@ export function Testimonials({ variant }: TestimonialsProps) {
       <div className={classes.container}>
         <HorizontalRail
           label="Depoimentos"
+          controlsTone={variant === 'landing' ? 'light' : 'dark'}
           heading={(
             <div className={classes.heading}>
               <p className={classes.eyebrow}>DEPOIMENTOS</p>

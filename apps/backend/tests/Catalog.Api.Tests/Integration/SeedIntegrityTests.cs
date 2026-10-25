@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Catalog.Api.Content;
 using Catalog.Api.Data;
 using Catalog.Api.Data.Seed;
 using Microsoft.EntityFrameworkCore;
@@ -48,6 +49,7 @@ public sealed class SeedIntegrityTests(PostgreSqlFixture postgres)
             Assert.Equal(definition.FullName, course.FullName);
             Assert.Equal(definition.ShortName, course.ShortName);
             Assert.Equal(definition.Description, course.Description);
+            Assert.Equal(definition.ShortDescription, course.ShortDescription);
             Assert.Equal(definition.WorkloadHours, course.WorkloadHours);
             Assert.Equal(definition.TargetAudience, course.TargetAudience);
             Assert.Equal(definition.ImageUrl, course.ImageUrl);
@@ -59,6 +61,15 @@ public sealed class SeedIntegrityTests(PostgreSqlFixture postgres)
             Assert.Equal(CatalogSeedData.CreateModalities().Single(item => item.Id == course.ModalityId).Name, course.Modality.Name);
             Assert.Equal(CatalogSeedData.CreateStatuses().Single(item => item.Id == course.CourseStatusId).Name, course.Status.Name);
             Assert.Equal(definition.Modules.Count, course.Modules.Count);
+
+            var presentation = CoursePresentationSerializer.Deserialize(course.PresentationJson);
+            var expectedPresentation = CoursePresentationSerializer.Deserialize(definition.PresentationJson);
+            Assert.Equal(CoursePresentationSerializer.Serialize(expectedPresentation),
+                CoursePresentationSerializer.Serialize(presentation));
+            Assert.Equal(10, presentation.Faqs.Count);
+            Assert.Equal(10, presentation.LearningPreview.ProgressPercent);
+            Assert.Equal(3, presentation.LearningPreview.Article.Paragraphs.Count);
+            Assert.Equal(4, presentation.LearningPreview.Recommendations.Paragraphs.Count);
 
             foreach (var module in course.Modules)
             {

@@ -16,7 +16,7 @@ public sealed class PersistenceTests(PostgreSqlFixture postgres)
     {
         var connectionString = await postgres.CreateDatabaseAsync();
         await using var context = PostgreSqlFixture.CreateContext(connectionString);
-        Assert.Single(await context.Database.GetPendingMigrationsAsync());
+        Assert.Equal(3, (await context.Database.GetPendingMigrationsAsync()).Count());
         await context.Database.MigrateAsync();
         context.Categories.Add(new Category { Id = 9000, Name = "Categoria de teste" });
         await context.SaveChangesAsync();
@@ -24,7 +24,7 @@ public sealed class PersistenceTests(PostgreSqlFixture postgres)
         context.ChangeTracker.Clear();
 
         Assert.Empty(await context.Database.GetPendingMigrationsAsync());
-        Assert.Single(await context.Database.GetAppliedMigrationsAsync());
+        Assert.Equal(3, (await context.Database.GetAppliedMigrationsAsync()).Count());
         Assert.False(context.Database.HasPendingModelChanges());
         Assert.Equal("Categoria de teste", (await context.Categories.FindAsync(9000))!.Name);
         await context.Courses.CountAsync();
@@ -32,6 +32,32 @@ public sealed class PersistenceTests(PostgreSqlFixture postgres)
         await context.CourseStatuses.CountAsync();
         await context.CourseModules.CountAsync();
         await context.Lessons.CountAsync();
+    }
+
+    [Fact]
+    public async Task PersistsTheSixCourseStructuresAndMathematicsTopicsInOrder()
+    {
+        await using var context = PostgreSqlFixture.CreateContext(await postgres.CreateMigratedDatabaseAsync());
+        var courses = await context.Courses.AsNoTracking()
+            .Include(course => course.Modules).ThenInclude(module => module.Lessons)
+            .OrderBy(course => course.Id).ToListAsync();
+
+        Assert.Equal(6, courses.Count);
+        Assert.Equal(new[] { 10, 4, 3, 5, 2, 4 }, courses.Select(course => course.Modules.Count));
+        Assert.Equal(new[] { 30, 9, 7, 11, 6, 9 }, courses.Select(course =>
+            course.Modules.Sum(module => module.Lessons.Count)));
+
+        var math = Assert.Single(courses, course => course.Id == 1);
+        var orderedModules = math.Modules.OrderBy(module => module.DisplayOrder).ToArray();
+        Assert.Equal("Introdução à Matemática na Metalurgia", orderedModules[0].Title);
+        Assert.Equal("Avaliação Final e Certificação", orderedModules[^1].Title);
+        Assert.Equal("Conceitos fundamentais de medidas e escalas aplicados à metalurgia.",
+            orderedModules[0].Lessons.OrderBy(lesson => lesson.DisplayOrder).First().Description);
+        Assert.All(courses, course => Assert.All(course.Modules, module =>
+        {
+            Assert.Equal(course.Id, module.CourseId);
+            Assert.All(module.Lessons, lesson => Assert.Equal(module.Id, lesson.CourseModuleId));
+        }));
     }
 
     [Fact]
@@ -167,6 +193,7 @@ public sealed class PersistenceTests(PostgreSqlFixture postgres)
         {
             Id = 9000, FullName = "Curso de teste", ShortName = "Teste",
             Description = "Descrição fictícia para teste relacional.",
+            ShortDescription = "Resumo de teste.", PresentationJson = "{}",
             CategoryId = 9000, ModalityId = 9000, CourseStatusId = 9000,
             WorkloadHours = 12.50m, TargetAudience = "Público de teste", ImageUrl = "/images/test.svg",
             Modules = [new CourseModule

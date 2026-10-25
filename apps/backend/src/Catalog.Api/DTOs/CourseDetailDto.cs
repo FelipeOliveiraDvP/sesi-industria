@@ -5,6 +5,7 @@ public sealed record CourseDetailDto(
     string FullName,
     string ShortName,
     string Description,
+    string ShortDescription,
     LookupDto Category,
     LookupDto Modality,
     LookupDto Status,
@@ -12,4 +13,5 @@ public sealed record CourseDetailDto(
     string TargetAudience,
     string ImageUrl,
     DateOnly? AvailableOn,
-    IReadOnlyList<CourseModuleDto> Modules);
+    IReadOnlyList<CourseModuleDto> Modules,
+    CoursePresentationDto Presentation);

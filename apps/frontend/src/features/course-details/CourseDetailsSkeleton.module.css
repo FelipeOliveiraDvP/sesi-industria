@@ -1,0 +1,183 @@
+.main {
+  background: #ffffff;
+}
+
+.status {
+  width: min(100% - 3rem, 76rem);
+  margin: 0 auto;
+  padding-top: 1rem;
+  color: #4f4a49;
+  font-size: 0.875rem;
+}
+
+.hero {
+  padding-block: clamp(3.5rem, 6vw, 5.5rem) 3rem;
+}
+
+.container,
+.heroContainer {
+  width: min(100% - 3rem, 76rem);
+  margin-inline: auto;
+}
+
+.heroContainer {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.2fr);
+  align-items: center;
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+}
+
+.heroCopy {
+  min-width: 0;
+}
+
+.badge {
+  width: 8.5rem;
+  height: 2rem;
+  border-radius: 999px;
+}
+
+.title {
+  display: grid;
+  gap: 0.5rem;
+  margin-block: 1rem 1.5rem;
+}
+
+.titleLine,
+.titleLineShort {
+  height: clamp(2.5rem, 3.4vw, 3rem);
+}
+
+.titleLineShort {
+  width: 72%;
+}
+
+.metadata {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+}
+
+.metadataRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 1.5rem;
+}
+
+.enrollPlaceholder {
+  width: 9rem;
+  height: 2.75rem;
+  border-radius: 0.375rem;
+}
+
+.heroImage {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 0.625rem;
+  background: #0c0c0d;
+}
+
+.imagePlaceholder {
+  width: 100%;
+  height: 100%;
+}
+
+.benefits {
+  padding-block: 1.5rem 4.5rem;
+}
+
+.content {
+  padding-block: 2rem clamp(4rem, 8vw, 7rem);
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  align-items: start;
+  gap: clamp(3rem, 7vw, 7rem);
+}
+
+.content h2 {
+  margin: 0 0 1.25rem;
+  color: #0c0c0d;
+  font-size: clamp(2rem, 3.4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.04em;
+}
+
+.descriptionLines {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.descriptionLine,
+.descriptionLineShort {
+  height: 0.9375rem;
+}
+
+.descriptionLineShort {
+  width: 64%;
+}
+
+.accordions {
+  min-width: 0;
+  border-top: 1px solid #e6e1e0;
+}
+
+.accordionRow {
+  display: flex;
+  min-height: 4.25rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid #e6e1e0;
+}
+
+@media (max-width: $mantine-breakpoint-md) {
+  .container,
+  .heroContainer,
+  .status {
+    width: min(100% - 2.5rem, 76rem);
+  }
+
+  .heroContainer {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: 2rem;
+  }
+
+  .contentGrid {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: 2rem;
+  }
+}
+
+@media (max-width: $mantine-breakpoint-sm) {
+  .container,
+  .heroContainer,
+  .status {
+    width: min(100% - 2rem, 76rem);
+  }
+
+  .hero {
+    padding-block: 3rem 2rem;
+  }
+
+  .heroContainer,
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .heroContainer {
+    gap: 2rem;
+  }
+
+  .contentGrid {
+    gap: 2.5rem;
+  }
+
+  .benefits {
+    padding-block: 1rem 3rem;
+  }
+}

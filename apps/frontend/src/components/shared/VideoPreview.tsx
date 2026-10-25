@@ -3,15 +3,21 @@ import classes from './VideoPreview.module.css'
 
 type VideoPreviewProps = {
   description: string
+  imageUrl?: string
+  imageAlt?: string
 }
 
-export function VideoPreview({ description }: VideoPreviewProps) {
+export function VideoPreview({
+  description,
+  imageUrl = assetPaths.images.videoThumbnail,
+  imageAlt = 'Dois profissionais em um ambiente industrial demonstrando um equipamento.',
+}: VideoPreviewProps) {
   return (
     <figure className={classes.preview}>
       <img
         className={classes.photo}
-        src={assetPaths.images.videoThumbnail}
-        alt="Dois profissionais em um ambiente industrial demonstrando um equipamento."
+        src={imageUrl}
+        alt={imageAlt}
         loading="lazy"
         decoding="async"
       />

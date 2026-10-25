@@ -1,0 +1,63 @@
+.state {
+  display: grid;
+  min-height: 40vh;
+  place-items: center;
+  padding: clamp(2rem, 6vw, 5rem) 1.5rem;
+  color: #0c0c0d;
+  background: #ffffff;
+}
+
+.state section {
+  width: min(100%, 34rem);
+}
+
+.state h1 {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  line-height: 1.15;
+}
+
+.state p {
+  margin: 0;
+  color: #4f4a49;
+  line-height: 1.6;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.retry,
+.returnLink {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #0c0c0d;
+  border-radius: 0.375rem;
+  padding: 0.6rem 1rem;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.retry {
+  color: #ffffff;
+  background: #890000;
+  cursor: pointer;
+}
+
+.returnLink {
+  color: #0c0c0d;
+  background: #ffffff;
+}
+
+.retry:focus-visible,
+.returnLink:focus-visible {
+  outline: 3px solid #890000;
+  outline-offset: 3px;
+}

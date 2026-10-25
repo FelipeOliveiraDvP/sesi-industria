@@ -69,6 +69,15 @@ namespace Catalog.Api.Data.Migrations
                     b.Property<int>("ModalityId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("PresentationJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("ShortDescription")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
                     b.Property<string>("ShortName")
                         .IsRequired()
                         .HasMaxLength(80)

@@ -1,10 +1,10 @@
 import { Accordion } from '@mantine/core'
 import { useState } from 'react'
 import { assetPaths } from '../../app/assets'
-import { course, courseAssessments, courseFaqs, courseModules, onlineLessons } from '../../mocks/course-details'
+import type { CourseDetail } from '../courses/types'
 import classes from './CourseDetailsContent.module.css'
 
-export function CourseDetailsContent() {
+export function CourseDetailsContent({ course }: { course: CourseDetail }) {
   const [openGroups, setOpenGroups] = useState<string[]>([])
 
   return (
@@ -39,11 +39,11 @@ export function CourseDetailsContent() {
               </Accordion.Control>
               <Accordion.Panel>
                 <ol className={classes.modules}>
-                  {courseModules.map((module, index) => (
-                    <li key={module.title}>
-                      <h4>{index + 1}. {module.title}</h4>
+                  {course.modules.map((module) => (
+                    <li key={module.id}>
+                      <h4>{module.order}. {module.title}</h4>
                       <ul>
-                        {module.topics.map((topic) => <li key={topic}>{topic}</li>)}
+                        {module.lessons.map((lesson) => <li key={lesson.id}>{lesson.description}</li>)}
                       </ul>
                     </li>
                   ))}
@@ -58,19 +58,19 @@ export function CourseDetailsContent() {
               <Accordion.Panel>
                 <div className={classes.contentBlock}>
                   <h4>Aulas online</h4>
-                  <p>{onlineLessons.introduction}</p>
+                  <p>{course.presentation.onlineLessons.introduction}</p>
                   <ul>
-                    {onlineLessons.topics.map((topic) => <li key={topic}>{topic}</li>)}
+                    {course.presentation.onlineLessons.topics.map((topic) => <li key={topic}>{topic}</li>)}
                   </ul>
-                  <p>{onlineLessons.accessibility}</p>
+                  <p>{course.presentation.onlineLessons.accessibility}</p>
                 </div>
                 <div className={classes.contentBlock}>
                   <h4>Provas e Avaliações</h4>
-                  <p>{courseAssessments.introduction}</p>
+                  <p>{course.presentation.assessments.introduction}</p>
                   <ul>
-                    {courseAssessments.topics.map((topic) => <li key={topic}>{topic}</li>)}
+                    {course.presentation.assessments.topics.map((topic) => <li key={topic}>{topic}</li>)}
                   </ul>
-                  <p>{courseAssessments.conclusion}</p>
+                  <p>{course.presentation.assessments.conclusion}</p>
                 </div>
               </Accordion.Panel>
             </Accordion.Item>
@@ -81,7 +81,7 @@ export function CourseDetailsContent() {
               </Accordion.Control>
               <Accordion.Panel>
                 <dl className={classes.faqList}>
-                  {courseFaqs.map((faq) => (
+                  {course.presentation.faqs.map((faq) => (
                     <div key={faq.question}>
                       <dt>{faq.question}</dt>
                       <dd>{faq.answer}</dd>

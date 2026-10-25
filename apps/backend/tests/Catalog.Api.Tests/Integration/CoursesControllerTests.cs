@@ -20,7 +20,8 @@ public sealed class CoursesControllerTests(PostgreSqlFixture postgres)
         Assert.Equal(6, list.TotalCount);
         var detail = await client.GetFromJsonAsync<CourseDetailDto>("/api/courses/1");
         Assert.NotNull(detail);
-        Assert.Equal("TecEdu", detail.ShortName);
+        Assert.Equal("Metrologia", detail.ShortName);
+        Assert.Equal("Aplicação de grandezas, proporções e escalas em processos de corte, furação e usinagem.", detail.ShortDescription);
         Assert.NotEmpty(detail.Modules);
     }
 

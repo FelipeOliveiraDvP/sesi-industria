@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { routePaths } from '../../app/routes'
-import { course } from '../../mocks/course-details'
+import { learningEnvironmentPath } from '../../app/course-paths'
+import type { CourseDetail } from '../courses/types'
 import classes from './EnrollmentBar.module.css'
 
-export function EnrollmentBar() {
+export function EnrollmentBar({ course }: { course: CourseDetail }) {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
@@ -35,8 +35,8 @@ export function EnrollmentBar() {
       aria-hidden={!visible}
       inert={!visible}
     >
-      <p>{course.title}</p>
-      <Link className={classes.link} to={routePaths.learningEnvironment} aria-describedby="enrollment-bar-demo-note">
+      <p>{course.fullName}</p>
+      <Link className={classes.link} to={learningEnvironmentPath(course.id)} aria-describedby="enrollment-bar-demo-note">
         Matricule-se <span aria-hidden="true">→</span>
       </Link>
       <span id="enrollment-bar-demo-note" className={classes.visuallyHidden}>

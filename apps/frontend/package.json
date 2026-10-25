@@ -15,6 +15,8 @@
   "dependencies": {
     "@mantine/core": "9.7.3",
     "@mantine/hooks": "9.7.3",
+    "@tanstack/react-query": "5.104.5",
+    "axios": "1.20.0",
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "react-router-dom": "7.18.4"
