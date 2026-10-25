@@ -3,6 +3,7 @@
 Monorepo com API somente leitura em [apps/backend](apps/backend), interface demonstrativa em [apps/frontend](apps/frontend) e PostgreSQL. A aplicação pode ser executada individualmente durante o desenvolvimento ou como stack completa com Docker Compose. Os dados específicos de curso nas telas vêm da API; quando ela está indisponível, o frontend apresenta estados recuperáveis.
 
 - [Requisitos funcionais](docs/prd.md)
+- [Repositório no GitHub](https://github.com/FelipeOliveiraDvP/sesi-industria) (`main`)
 - [Desenvolvimento do backend](apps/backend/README.md)
 - [Desenvolvimento do frontend](apps/frontend/README.md)
 - [Publicação demonstrativa no Railway](docs/deploy-railway.md)
@@ -54,7 +55,7 @@ Limitações conhecidas: não há integração com Moodle, autenticação, matr�
 
 ## Publicação e itens de entrega
 
-O procedimento de publicação gratuita e suas configurações estão em [docs/deploy-railway.md](docs/deploy-railway.md). Este clone não possui remoto Git configurado nem URL de aplicação publicada registrada; associe o repositório, publique a solução e insira os links reais antes da entrega. O guia não representa uma publicação já realizada. O [registro de uso de IA](USO_DE_IA.md) descreve as ferramentas, os objetivos, os pedidos em resumo, a validação e uma lacuna identificada durante a integração.
+O código-fonte está no [repositório GitHub](https://github.com/FelipeOliveiraDvP/sesi-industria), com `main` como branch principal. A publicação demonstrativa no Railway ainda não foi realizada e não há URL de aplicação publicada registrada. Consulte [docs/deploy-railway.md](docs/deploy-railway.md) para a etapa futura de configuração e publicação; o roteiro não representa um deploy concluído. O [registro de uso de IA](USO_DE_IA.md) descreve as ferramentas, os objetivos, os pedidos em resumo, a validação e uma lacuna identificada durante a integração.
 
 ## Requisitos mínimos de desenvolvimento
 
@@ -162,10 +163,10 @@ Para iniciar somente o banco em Docker e executar API/frontend no host, use as i
 
 ### 1. Clonar e entrar na raiz
 
-Substitua `URL_DO_REPOSITORIO` pela URL do seu repositório. Os comandos funcionam em Bash e PowerShell:
+Clone o repositório oficial por SSH (é necessário ter uma chave SSH cadastrada no GitHub). Os comandos funcionam em Bash e PowerShell:
 
 ```sh
-git clone URL_DO_REPOSITORIO sesi-industria
+git clone git@github.com:FelipeOliveiraDvP/sesi-industria.git sesi-industria
 cd sesi-industria
 ```
 

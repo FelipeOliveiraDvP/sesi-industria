@@ -1,8 +1,8 @@
 # Publicação demonstrativa no Railway
 
-Este roteiro prepara uma publicação manual da aplicação demonstrativa. As imagens e configurações Railway estão versionadas no repositório; a associação do repositório, o provisionamento do banco, os domínios e as variáveis são ações do operador no painel Railway. Este projeto não cria repositório, configura remoto, executa `gh`, envia commits ou publica serviços.
+Este roteiro descreve a publicação Railway ainda pendente da aplicação demonstrativa. O código-fonte está no [repositório GitHub](https://github.com/FelipeOliveiraDvP/sesi-industria), com `main` como branch principal. As imagens e configurações Railway estão versionadas; a associação desse repositório ao Railway, o provisionamento do banco, os domínios, as variáveis e o deploy ainda dependem de configuração do operador no painel.
 
-> **Pré-requisito:** os arquivos desta change devem estar em um repositório GitHub existente, na branch escolhida para deploy. A criação/publicação inicial do repositório não faz parte deste roteiro. Confirme também qual branch será usada; a configuração não pressupõe `main`.
+> **Pré-requisito:** o código está publicado no [repositório GitHub SESI Indústria](https://github.com/FelipeOliveiraDvP/sesi-industria). Para a futura integração Railway, associe esse repositório e selecione a branch `main`.
 
 ## Arquitetura
 
@@ -23,10 +23,10 @@ Os Dockerfiles são construídos com a raiz do monorepo como contexto, para que 
 ## 1. Prepare os serviços no painel
 
 1. Crie um projeto/ambiente Railway para a demonstração e adicione um serviço PostgreSQL `17`. Aguarde o serviço ficar disponível. Confirme no painel que os dados estão em armazenamento persistente e revise a política de backup/restauração disponível no plano usado; não assuma que backups foram configurados automaticamente.
-2. Adicione um serviço de aplicação ligado ao repositório existente para a API. Em **Settings**, mantenha **Root Directory** em `/` e selecione como arquivo de configuração Railway `/apps/backend/railway.json`.
-3. Adicione outro serviço ligado ao mesmo repositório para o frontend. Mantenha **Root Directory** em `/` e selecione `/apps/frontend/railway.json`.
+2. Adicione um serviço de aplicação ligado ao [repositório GitHub](https://github.com/FelipeOliveiraDvP/sesi-industria) para a API. Em **Settings**, mantenha **Root Directory** em `/` e selecione como arquivo de configuração Railway `/apps/backend/railway.json`.
+3. Adicione outro serviço ligado ao mesmo repositório e branch `main` para o frontend. Mantenha **Root Directory** em `/` e selecione `/apps/frontend/railway.json`.
 4. Para cada serviço de aplicação, gere um domínio público HTTPS no painel. Use os domínios atribuídos pelo Railway, não nomes internos `*.railway.internal`, para as URLs consumidas pelo navegador.
-5. Defina a branch de deploy de acordo com o fluxo de apresentação acordado. A integração GitHub do Railway observa essa branch; não é configurada por um job de deploy neste repositório.
+5. Selecione `main` como branch de deploy. A integração GitHub do Railway observa essa branch; não é configurada por um job de deploy neste repositório.
 
 Os arquivos Railway selecionam o builder Dockerfile, os caminhos de build e as verificações de disponibilidade. Eles não criam serviços, domínio, volume, secrets, Root Directory, associação GitHub nem ativam **Wait for CI**. A rota `/api/courses` é o healthcheck da API: enquanto banco, migrations ou seed impedirem a resposta HTTP, o novo serviço ainda não estará pronto. O timeout declarado é 300 segundos para a API e 60 para o frontend; a política de reinício é `ON_FAILURE`, com até três tentativas, e cada serviço usa uma réplica.
 
@@ -72,11 +72,11 @@ Não habilite Swagger/OpenAPI em Production: a aplicação os expõe apenas em D
 
 `.github/workflows/ci.yml` executa no GitHub Actions para pushes, pull requests e execução manual. Ela verifica o workspace frontend, os testes backend com PostgreSQL Testcontainers e os smoke tests das imagens. A workflow tem permissão somente de leitura do conteúdo e não usa token Railway, `gh`, publicação de imagens ou secrets externos.
 
-No painel Railway, habilite **Wait for CI** para os serviços ligados ao repositório depois de confirmar que a workflow aparece e conclui para a branch escolhida. A integração Railway mantém o deploy aguardando os check suites da GitHub Actions; uma CI com falha não deve liberar o novo deploy. Essa opção é configuração externa e não é ativada por este repositório. Sem ela, a integração automática pode tentar publicar um push independentemente do resultado dos testes.
+No painel Railway, habilite **Wait for CI** para os serviços ligados ao repositório depois de confirmar que a workflow aparece e conclui para `main`. A integração Railway mantém o deploy aguardando os check suites da GitHub Actions; uma CI com falha não deve liberar o novo deploy. Essa opção é configuração externa e não é ativada por este repositório. Sem ela, a integração automática pode tentar publicar um push independentemente do resultado dos testes.
 
-Para validar as imagens localmente antes de conectar o repositório, execute `bash scripts/smoke-deployment.sh` a partir da raiz. O host precisa de Bash, Docker com daemon ativo, `curl`, Python 3 e acesso aos registries necessários para buscar as imagens base e dependências. O script usa nomes exclusivos para imagens, containers e rede de teste, inicializa PostgreSQL efêmero e limpa apenas os recursos que criou; não usa o banco do Compose nem requer SDK .NET ou Node no host. Ele verifica o seed, as rotas da SPA, assets, headers e origens configuradas, sem publicar nada no Railway.
+Para validar as imagens localmente antes de conectar o repositório ao Railway, execute `bash scripts/smoke-deployment.sh` a partir da raiz. O host precisa de Bash, Docker com daemon ativo, `curl`, Python 3 e acesso aos registries necessários para buscar as imagens base e dependências. O script usa nomes exclusivos para imagens, containers e rede de teste, inicializa PostgreSQL efêmero e limpa apenas os recursos que criou; não usa o banco do Compose nem requer SDK .NET ou Node no host. Ele verifica o seed, as rotas da SPA, assets, headers e origens configuradas, sem publicar nada no Railway.
 
-Não interprete builds locais ou a existência da workflow como comprovação de que o repositório foi associado, **Wait for CI** foi habilitado ou uma publicação externa foi executada. Essas ações permanecem no painel e ficam a cargo do operador.
+Não interprete builds locais ou a existência da workflow como comprovação de que o repositório foi associado ao Railway, **Wait for CI** foi habilitado ou uma publicação externa foi executada. Essas ações permanecem no painel e ficam a cargo do operador.
 
 ## 5. Migrations no startup: decisão da demonstração
 
@@ -97,7 +97,7 @@ Confirme manualmente no painel e nos domínios públicos:
 - A origem da API no bundle corresponde ao domínio HTTPS público, CORS permite somente leitura conforme a configuração existente, e o navegador não recebe credenciais de banco.
 - Reiniciar somente os serviços de aplicação preserva os dados PostgreSQL. Não valide isso removendo o volume ou apagando o banco.
 
-Não há publicação Railway, serviço remoto, repositório, domínio nem configuração externa realizados por este roteiro. Faça essa operação apenas depois de escolher o repositório/branch e revisar os arquivos e as variáveis no painel.
+O código-fonte está publicado no GitHub, mas ainda não há serviço, domínio ou configuração externa Railway realizados por este roteiro. Faça essa operação futura na branch `main`, depois de revisar os arquivos e as variáveis no painel.
 
 ## 7. Verificações locais desta preparação
 
