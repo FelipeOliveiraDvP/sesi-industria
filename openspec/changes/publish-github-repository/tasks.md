@@ -14,10 +14,10 @@
 ## 3. Publicação da branch principal
 
 - [x] 3.1 Configurar `origin` com a URL SSH indicada e revisar o commit em `main`, incluindo documentação, artifacts OpenSpec e o `opencode.json` autorizado; verificar `git remote -v`, o diff do commit e que não reste alteração não commitada desta change, preservando `dev` e outros arquivos não relacionados.
-- [ ] 3.2 Publicar `main` sem reescrever histórico, somente após confirmar que o push é novo ou fast-forward; verificar com `git ls-remote` que a ref remota `main` corresponde ao commit local e parar para decisão se o remoto tiver divergido.
-- [ ] 3.3 Confirmar no GitHub que `main` está definida como branch padrão; se necessário, ajustar somente essa configuração e verificar que visibilidade e permissões do repositório permaneceram inalteradas.
+- [x] 3.2 Publicar `main` sem reescrever histórico, somente após confirmar que o push é novo ou fast-forward; verificar com `git ls-remote` que a ref remota `main` corresponde ao commit local e parar para decisão se o remoto tiver divergido.
+- [x] 3.3 Confirmar no GitHub que `main` está definida como branch padrão; se necessário, ajustar somente essa configuração e verificar que visibilidade e permissões do repositório permaneceram inalteradas.
 
 ## 4. CI e verificação integrada
 
-- [ ] 4.1 Verificar o run de GitHub Actions associado ao commit publicado em `main` e confirmar os jobs de frontend, backend e containers; registrar qualquer falha sem alterar a CI ou iniciar deploy como contorno.
-- [ ] 4.2 Fazer uma validação final do clone documentado e do estado publicado: confirmar que `main` pode ser obtida pelo endereço SSH, que a documentação não contém placeholders/afirmações obsoletas e que Railway continua explicitamente pendente.
+- [x] 4.1 Verificar o run de GitHub Actions associado ao commit publicado em `main` e confirmar os jobs de frontend, backend e containers; registrar qualquer falha sem alterar a CI ou iniciar deploy como contorno.
+- [x] 4.2 Fazer uma validação final do clone documentado e do estado publicado: confirmar que `main` pode ser obtida pelo endereço SSH, que a documentação não contém placeholders/afirmações obsoletas e que Railway continua explicitamente pendente.
