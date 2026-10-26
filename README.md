@@ -55,7 +55,15 @@ Limitações conhecidas: não há integração com Moodle, autenticação, matr�
 
 ## Publicação e itens de entrega
 
-O código-fonte está no [repositório GitHub](https://github.com/FelipeOliveiraDvP/sesi-industria), com `main` como branch principal. A publicação demonstrativa no Railway ainda não foi realizada e não há URL de aplicação publicada registrada. Consulte [docs/deploy-railway.md](docs/deploy-railway.md) para a etapa futura de configuração e publicação; o roteiro não representa um deploy concluído. O [registro de uso de IA](USO_DE_IA.md) descreve as ferramentas, os objetivos, os pedidos em resumo, a validação e uma lacuna identificada durante a integração.
+O projeto está publicado no Railway e o código-fonte está no [repositório GitHub](https://github.com/FelipeOliveiraDvP/sesi-industria), com `main` como branch principal.
+
+- **Aplicação:** [abrir o catálogo](https://sesifrontend-production.up.railway.app/)
+- **API:** [listar cursos](https://sesi-api-production.up.railway.app/api/courses) · [detalhes do curso 1](https://sesi-api-production.up.railway.app/api/courses/1)
+- **Publicação e configuração:** [guia do Railway](docs/deploy-railway.md)
+
+O frontend e a API são serviços separados; o PostgreSQL é acessado pela API na rede privada. O [registro de uso de IA](USO_DE_IA.md) descreve as ferramentas, os objetivos, os pedidos em resumo, a validação e uma lacuna identificada durante a integração.
+
+A workflow de CI executa no GitHub Actions. A opção Railway **Wait for CI** ainda precisa ser habilitada e confirmada nos dois serviços; consulte o [estado e as instruções no guia](docs/deploy-railway.md#4-ci-e-publicação).
 
 ## Requisitos mínimos de desenvolvimento
 
